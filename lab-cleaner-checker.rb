@@ -1,12 +1,8 @@
 require 'time'
 require 'slack'
-require 'clockwork'
 require 'yaml'
 
-include Clockwork
-
 config_file = YAML.load_file('config.yml')
-LOG_FILE="log/next_group"
 
 Slack.configure do |config|
   config.token = config_file['slack']['token'] || ENV['SLACK_TOKEN']
@@ -45,37 +41,34 @@ def write_count(num)
   }
 end
 
-handler do |job|
-  case job
-  when 'lab-cleaner-day.job'
-    begin
-      today = Time.now
-      num_group = [0, 1, 2, 3, 4]
+def increment(num_today)
+  # return next num
+  max_group = 4
 
-      if today.strftime('%w') == '5'
-        # if today Friday
-        count = get_current_num
-        subject = today.strftime('%x') + "\nToday is Friday!\n" + "Today cleaner group is " + num_group[count].to_s
-
-        post_slack_messeage(subject, config_file)
-
-        if count == num_group.length
-          count = 1
-          write_count(count)
-        else
-          count += 1
-          write_count(count)
-        end
-
-      else
-        # if today not Friday
-        # do nothing
-      end
-    rescue => e
-      post_slack_messeage(e, config_file)
-    end
+  if num_today == max_group
+    return 1
+  else
+    return num_today += 1
   end
 end
 
-every(1.day, 'lab-cleaner-day.job', :at => '18:00')
-# every(10.seconds, 'lab-cleaner-day.job')
+begin
+  today = Time.now
+
+  if today.strftime('%w') == '5'
+    # if today Friday
+    count = get_current_num
+    subject = today.strftime('%x') + "\nToday is Friday!\n" + "Today cleaner group is " + num_group[count].to_s
+
+    post_slack_messeage(subject, config_file)
+
+    num_next = increment(count)
+    write_count(num_next)
+
+  else
+    # if today not Friday
+    # do nothing
+  end
+rescue => e
+  post_slack_messeage(e, config_file)
+end
