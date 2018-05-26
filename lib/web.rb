@@ -21,7 +21,7 @@ def run_web()
     body = {
       :text => 'Next group is ' + ng,
       :username => 'bot',
-      :mrkdwn => true
+      :response_type => 'in_channel'
     }.to_json
 
     res.body = body
