@@ -11,4 +11,4 @@ RUN bundle install --path=vendor/bundle
 
 ADD . /app/
 
-CMD bundle exec ruby lab-cleaner-checker.rb
+CMD bundle exec rake check_cleaner
