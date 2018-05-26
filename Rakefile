@@ -1,5 +1,8 @@
 $LOAD_PATH.unshift('./lib')
 
+require 'bundler/setup'
+Bundler.require
+
 desc "check today lab cleaner"
 task :check_cleaner do
   require 'lab-cleaner-checker'
