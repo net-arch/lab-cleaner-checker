@@ -56,22 +56,24 @@ def increment(num_today)
   end
 end
 
-begin
-  today = Time.now
-
-  if today.strftime('%w') == '5'
-    # if today Friday
-    count = get_current_num
-    subject = today.strftime('%x') + "\nToday is Friday!\n" + "Today cleaner group is " + count
-
-    post_slack_messeage(subject)
-
-    num_next = increment(count)
-    write_count(num_next)
-  else
-    # if today not Friday
-    # do nothing
+def check_lab_cleaner()
+  begin
+    today = Time.now
+  
+    if today.strftime('%w') == '5'
+      # if today Friday
+      count = get_current_num
+      subject = today.strftime('%x') + "\nToday is Friday!\n" + "Today cleaner group is " + count
+  
+      post_slack_messeage(subject)
+  
+      num_next = increment(count)
+      write_count(num_next)
+    else
+      # if today not Friday
+      # do nothing
+    end
+  rescue => e
+    post_slack_messeage(e)
   end
-rescue => e
-  post_slack_messeage(e)
 end
