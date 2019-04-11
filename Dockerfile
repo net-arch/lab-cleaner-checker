@@ -1,4 +1,4 @@
-FROM ruby:alpine
+FROM ruby:2.6.2-alpine3.9
 
 RUN mkdir -p /app/
 WORKDIR /app/
@@ -11,4 +11,4 @@ RUN bundle install --path=vendor/bundle
 
 ADD . /app/
 
-CMD bundle exec rake check_cleaner
+CMD bundle exec rake web:run
