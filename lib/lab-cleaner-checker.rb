@@ -6,14 +6,20 @@ require 'redis'
 Slack.configure do |config|
   config.token = ENV['SLACK_TOKEN']
   if config.token == ''
-    STDERR.puts "TOKEN is blank...\n"
+    STDERR.puts "must be set SLACK_TOKEN\n"
     exit(1)
   end
 end
 
 if ENV['REDIS_URL'] == ''
-  STDERR.puts "REDIS_URL is required\n"
+  STDERR.puts "must be set REDIS_URL\n"
   exit(1)
+end
+
+if ENV['NUM_MAX_GROUP'] == ''
+  $MAX_GROUP = 3
+else
+  $MAX_GROUP = ENV['NUM_MAX_GROUP']
 end
 
 
@@ -47,9 +53,8 @@ end
 def increment(num_today)
   # return next num
   num_today = num_today.to_i
-  max_group = 4
 
-  if num_today == max_group
+  if num_today == $MAX_GROUP
     return 1
   else
     return num_today += 1
