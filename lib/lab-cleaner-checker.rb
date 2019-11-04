@@ -47,7 +47,7 @@ end
 def increment(num_today)
   # return next num
   num_today = num_today.to_i
-  max_group = 4
+  max_group = 3
 
   if num_today == max_group
     return 1
